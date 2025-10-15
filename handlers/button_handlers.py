@@ -1,5 +1,5 @@
 from utils.locations import locations
-
+from telebot.types import InlineKeyboardButton,InlineKeyboardMarkup
 def button_handlers(bot):
     @bot.message_handler(func=lambda msg:True)
     def buttons(message):
@@ -7,11 +7,11 @@ def button_handlers(bot):
             case'📍 مکان‌ها':
                 find_locations(message)
             case 'لیست دروس 📚':
-                bot.send_message(message.chat.id,'dars ha')
+                lessons_list(message)
             case '🔗 لینک‌ها':
                 links(message)
             case 'شماره‌ها 📞':
-                bot.send_message(message.chat.id,'phones')
+                send_numbers(message)
     
     
     def links(message):
@@ -42,4 +42,25 @@ def button_handlers(bot):
             bot.send_message(message.chat.id,location['title'])
             bot.send_location(message.chat.id, latitude=location['latitude'], longitude=location['longitude'])
         
+    def send_numbers(message):
+        bot.send_message(message.chat.id,"""📞 شماره‌ها
+
+➖ کارشناس گروه علوم کامپیوتر (آقای شریفی):
++984133344015
+
+➖ آموزش علوم کامپیوتر (خانم مرندی):
++984133392844
+
+➖ تلفن گویا دانشکده ریاضی:
++984133392869""")
+        
+        
+    def lessons_list(message):
+        with open('./utils/documents/chart.pdf','rb') as doc:
+            bot.send_document(message.chat.id,doc,caption='برنامه_8_ترمی_رشته_علوم_کامپيوترورودی_97_به_بعد')
+        with open('./utils/documents/lessons.pdf','rb') as doc:
+            bot.send_document(message.chat.id,doc,caption='برنامه_دروس_مقطع_کارشناسی_رشته_علوم_کامپيوتر')
+            
+            
+            
                 

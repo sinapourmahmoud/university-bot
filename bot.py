@@ -11,6 +11,7 @@ class UniversityBot():
         register_hello(self.bot)
 
         button_handlers(self.bot)
+        
     
     
     def end(self):
