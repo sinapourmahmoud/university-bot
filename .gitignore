@@ -1,5 +1,24 @@
-# .gitignore
-.env
+# Python cache files
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
 venv/
+env/
+
+# IDE configs
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Byte-compiled files
 *.pyc
+
+# macOS
+.DS_Store
