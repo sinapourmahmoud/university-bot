@@ -1,9 +1,11 @@
+from utils.locations import locations
+
 def button_handlers(bot):
     @bot.message_handler(func=lambda msg:True)
     def buttons(message):
         match(message.text):
             case'📍 مکان‌ها':
-                print('kasakam')
+                find_locations(message)
             case 'لیست دروس 📚':
                 bot.send_message(message.chat.id,'dars ha')
             case '🔗 لینک‌ها':
@@ -32,6 +34,12 @@ def button_handlers(bot):
         )
        
        bot.send_message(message.chat.id, text, parse_mode="HTML", disable_web_page_preview=True)
-
+    
+    
+    def find_locations(message):
+        
+        for location in locations:
+            bot.send_message(message.chat.id,location['title'])
+            bot.send_location(message.chat.id, latitude=location['latitude'], longitude=location['longitude'])
         
                 
