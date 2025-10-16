@@ -23,11 +23,9 @@ def write_wellcome(message):
 #     name=message.text
 #     bot.send_message(message.chat.id,f" your name is {name}")
 
-def sina(call):
-    print(call)
-    return True
 
-@bot.callback_query_handler(lambda call:sina(call))
+
+@bot.callback_query_handler(lambda call:True)
 def check_button(call):
     if(call.data=='btn1'):
         bot.answer_callback_query(call.id,'btn1 is pressed',show_alert="it is pressed")

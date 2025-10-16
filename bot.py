@@ -1,6 +1,6 @@
 import telebot
 from handlers.register_hello import register_hello
-from handlers.button_handlers import button_handlers
+from handlers.button_handlers import register_buttons
 class UniversityBot():
     
     def __init__(self):
@@ -10,7 +10,7 @@ class UniversityBot():
     def handlers(self):
         register_hello(self.bot)
 
-        button_handlers(self.bot)
+        register_buttons(self.bot)
         
     
     

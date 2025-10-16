@@ -1,49 +1,54 @@
+from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 from utils.locations import locations
-from telebot.types import InlineKeyboardButton,InlineKeyboardMarkup
-def button_handlers(bot):
-    @bot.message_handler(func=lambda msg:True)
+
+def register_buttons(bot):
+
+    @bot.message_handler(func=lambda msg: True)
     def buttons(message):
-        match(message.text):
-            case'📍 مکان‌ها':
-                find_locations(message)
+        match message.text:
+            case '📍 مکان‌ها':
+                send_location_menu(message)
             case 'لیست دروس 📚':
-                lessons_list(message)
+                send_lessons(message)
             case '🔗 لینک‌ها':
-                links(message)
+                send_links(message)
             case 'شماره‌ها 📞':
                 send_numbers(message)
-    
-    
-    def links(message):
-       text = (
-        "🔗 <b>لینک‌های مفید</b>\n\n"
-        "➖ <a href='https://t.me/tabrizcs'>اخبار گروه علوم کامپیوتر</a>\n"
-        "➖ <a href='https://t.me/anjomancs'>انجمن علمی گروه علوم کامپیوتر</a>\n"
-        "➖ <a href='https://t.me/CS404_TBZ'>از من بپرس</a>\n"
-        "➖ <a href='https://t.me/riazitabriz967'>دانشکده علوم ریاضی</a>\n"
-        "➖ <a href='https://t.me/mathTabrizu'>اطلاعیه‌های دانشکده ریاضی، آمار و علوم کامپیوتر</a>\n"
-        "➖ <a href='https://t.me/publictabrizuniversity'>کانال دانشگاه تبریز</a>\n"
-        "➖ <a href='https://t.me/shourasenfi_tabrizu'>شورای صنفی-رفاهی</a>\n"
-        "➖ <a href='https://t.me/Tabriz_university_students'>اجتماع دانشجویان دانشگاه تبریز</a>\n"
-        "➖ <a href='https://t.me/TabrizU_Kalagh'>کلاغ دانشگاه تبریز</a>\n"
-        "➖ <a href='https://t.me/sedayedaneshjoyan'>صدای دانشجویان دانشگاه تبریز</a>\n"
-        "➖ <a href='https://samad.tabrizu.ac.ir/'>سایت سماد دانشگاه تبریز (امور دانشجویی)</a>\n"
-        "➖ <a href='https://amozesh.tabrizu.ac.ir/'>سایت سما دانشگاه تبریز (امور آموزشی)</a>\n"
-        "➖ <a href='https://refah.swf.ir/'>سایت صندوق رفاه دانشجویان</a>\n"
-        "➖ <a href='https://tabrizu.ac.ir/fa'>سایت دانشگاه تبریز</a>"
+
+
+    def send_location_menu(message):
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(
+            InlineKeyboardButton("🛟 مکان‌های رفاهی و تفریحی", callback_data='facilities'),
+            InlineKeyboardButton("🏢 خوابگاه‌ها", callback_data='dormitories'),
+            InlineKeyboardButton("🍕 رستوران‌ها", callback_data='restaurants'),
+            InlineKeyboardButton("📕 مکان‌های علمی و آموزشی", callback_data='educations')
         )
-       
-       bot.send_message(message.chat.id, text, parse_mode="HTML", disable_web_page_preview=True)
-    
-    
-    def find_locations(message):
-        
-        for location in locations:
-            bot.send_message(message.chat.id,location['title'])
-            bot.send_location(message.chat.id, latitude=location['latitude'], longitude=location['longitude'])
-        
+        bot.send_message(message.chat.id, "📍 لطفاً دسته‌بندی مورد نظر رو انتخاب کن:", reply_markup=markup)
+
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def handle_callback(call):
+        print(f"CALLBACK RECEIVED: {call.data}")  
+
+        if call.data == 'facilities':
+            send_locations(call.message, locations['facilities'], "🛟 مکان‌های رفاهی و تفریحی")
+        elif call.data == 'dormitories':
+            send_locations(call.message, locations['dormitories'], "🏢 خوابگاه‌ها")
+        elif call.data == 'restaurants':
+            send_locations(call.message, locations['restaurants'], "🍕 رستوران‌ها")
+        elif call.data == 'educations':
+            send_locations(call.message, locations['educations'], "📕 مکان‌های علمی و آموزشی")
+
+    def send_locations(message, location_list, title):
+        bot.send_message(message.chat.id, f"📍 {title}:")
+        for loc in location_list:
+            bot.send_message(message.chat.id, f"📍 {loc['title']}")
+            bot.send_location(message.chat.id, latitude=loc['latitude'], longitude=loc['longitude'])
+
+
     def send_numbers(message):
-        bot.send_message(message.chat.id,"""📞 شماره‌ها
+        bot.send_message(message.chat.id, """📞 شماره‌ها
 
 ➖ کارشناس گروه علوم کامپیوتر (آقای شریفی):
 +984133344015
@@ -53,14 +58,32 @@ def button_handlers(bot):
 
 ➖ تلفن گویا دانشکده ریاضی:
 +984133392869""")
-        
-        
-    def lessons_list(message):
-        with open('./utils/documents/chart.pdf','rb') as doc:
-            bot.send_document(message.chat.id,doc,caption='برنامه_8_ترمی_رشته_علوم_کامپيوترورودی_97_به_بعد')
-        with open('./utils/documents/lessons.pdf','rb') as doc:
-            bot.send_document(message.chat.id,doc,caption='برنامه_دروس_مقطع_کارشناسی_رشته_علوم_کامپيوتر')
-            
-            
-            
-                
+
+    def send_lessons(message):
+        with open('./utils/documents/chart.pdf', 'rb') as doc:
+            bot.send_document(message.chat.id, doc, caption='برنامه ۸ ترمی رشته علوم کامپیوتر')
+        with open('./utils/documents/lessons.pdf', 'rb') as doc:
+            bot.send_document(message.chat.id, doc, caption='لیست دروس رشته علوم کامپیوتر')
+
+    def send_links(message):
+        text = """def links(message):
+    text = 
+        🔗 لینک‌های مفید\n\n
+        ➖ اخبار گروه علوم کامپیوتر:\nhttps://t.me/tabrizcs\n
+        ➖ انجمن علمی گروه علوم کامپیوتر:\nhttps://t.me/anjomancs\n
+        ➖ از من بپرس:\nhttps://t.me/CS404_TBZ\n
+        ➖ دانشکده علوم ریاضی:\nhttps://t.me/riazitabriz967\n
+        ➖ اطلاعیه‌های دانشکده ریاضی، آمار و علوم کامپیوتر:\nhttps://t.me/mathTabrizu\n
+        ➖ کانال دانشگاه تبریز:\nhttps://t.me/publictabrizuniversity\n
+        ➖ شورای صنفی-رفاهی:\nhttps://t.me/shourasenfi_tabrizu\n
+        ➖ اجتماع دانشجویان دانشگاه تبریز:\nhttps://t.me/Tabriz_university_students\n
+        ➖ کلاغ دانشگاه تبریز:\nhttps://t.me/TabrizU_Kalagh\n
+        ➖ صدای دانشجویان دانشگاه تبریز:\nhttps://t.me/sedayedaneshjoyan\n
+        ➖ سایت سماد دانشگاه تبریز (امور دانشجویی):\nhttps://samad.tabrizu.ac.ir/\n
+        ➖ سایت سما دانشگاه تبریز (امور آموزشی):\nhttps://amozesh.tabrizu.ac.ir/\n
+        ➖ سایت صندوق رفاه دانشجویان:\nhttps://refah.swf.ir/\n
+        ➖ سایت دانشگاه تبریز:\nhttps://tabrizu.ac.ir/fa
+    
+
+"""
+        bot.send_message(message.chat.id, text, disable_web_page_preview=True)
