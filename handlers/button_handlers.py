@@ -107,7 +107,6 @@ def register_buttons(bot):
         text = """
         🔗 لینک‌های مفید\n\n
         ➖ اخبار گروه علوم کامپیوتر:\nhttps://t.me/tabrizcs\n
-        ➖ انجمن علمی گروه علوم کامپیوتر:\nhttps://t.me/anjomancs\n
         ➖ از من بپرس:\nhttps://t.me/CS404_TBZ\n
         ➖ دانشکده علوم ریاضی:\nhttps://t.me/riazitabriz967\n
         ➖ اطلاعیه‌های دانشکده ریاضی، آمار و علوم کامپیوتر:\nhttps://t.me/mathTabrizu\n
