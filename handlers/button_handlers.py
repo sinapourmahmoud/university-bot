@@ -24,9 +24,9 @@ def register_buttons(bot):
         markup.add(
             InlineKeyboardButton("🛟 مکان‌های رفاهی و تفریحی", callback_data='cat-facilities'),
             InlineKeyboardButton("🏛 خوابگاه‌ها", callback_data='cat-dormitories'),
-            InlineKeyboardButton("🌭 سلف ها", callback_data='cat-restaurants'),
-            InlineKeyboardButton("🌭 رستوران ها(تاک ها)", callback_data='cat-free_restaurants'),
-            InlineKeyboardButton("📖 مکان‌های علمی و آموزشی", callback_data='cat-educations')
+            InlineKeyboardButton("🌭 سلف‌ها", callback_data='cat-restaurants'),
+            InlineKeyboardButton("🌭 رستوران‌ها(تاک‌ها)", callback_data='cat-free_restaurants'),
+            InlineKeyboardButton("📖 مکان‌‌های علمی و آموزشی", callback_data='cat-educations')
         )
         bot.send_message(chat_id, "📍 لطفاً دسته‌بندی مورد نظر رو انتخاب کن:", reply_markup=markup)
 
@@ -112,12 +112,12 @@ def register_buttons(bot):
         ➖ دانشکده علوم ریاضی:\nhttps://t.me/riazitabriz967\n
         ➖ اطلاعیه‌های دانشکده ریاضی، آمار و علوم کامپیوتر:\nhttps://t.me/mathTabrizu\n
         ➖ کانال دانشگاه تبریز:\nhttps://t.me/publictabrizuniversity\n
+        ➖ سایت سماد دانشگاه تبریز (امور دانشجویی):\nhttps://samad.tabrizu.ac.ir/\n
+        ➖ سایت سما دانشگاه تبریز (امور آموزشی):\nhttps://amozesh.tabrizu.ac.ir/\n
         ➖ شورای صنفی-رفاهی:\nhttps://t.me/shourasenfi_tabrizu\n
         ➖ اجتماع دانشجویان دانشگاه تبریز:\nhttps://t.me/Tabriz_university_students\n
         ➖ کلاغ دانشگاه تبریز:\nhttps://t.me/TabrizU_Kalagh\n
         ➖ صدای دانشجویان دانشگاه تبریز:\nhttps://t.me/sedayedaneshjoyan\n
-        ➖ سایت سماد دانشگاه تبریز (امور دانشجویی):\nhttps://samad.tabrizu.ac.ir/\n
-        ➖ سایت سما دانشگاه تبریز (امور آموزشی):\nhttps://amozesh.tabrizu.ac.ir/\n
         ➖ سایت صندوق رفاه دانشجویان:\nhttps://refah.swf.ir/\n
         ➖ سایت دانشگاه تبریز:\nhttps://tabrizu.ac.ir/fa
     
