@@ -1,10 +1,14 @@
 import telebot
 from handlers.register_hello import register_hello
 from handlers.button_handlers import register_buttons
+import dotenv
+import os
+dotenv.load_dotenv()
+
 class UniversityBot():
     
     def __init__(self):
-        self.bot=telebot.TeleBot('7957636569:AAHjRB7tvPXCtSING70W6FlGyz75HTp0trk')
+        self.bot=telebot.TeleBot(os.getenv('BOT_TOKEN'))
         self.handlers()
         
     def handlers(self):
