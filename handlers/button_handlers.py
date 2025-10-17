@@ -15,7 +15,7 @@ def register_buttons(bot):
                 send_links(message)
             case 'شماره‌ها 📞':
                 send_numbers(message)
-            case '🌐 صفحات مجازی':
+            case '🌐 مجازی':
                 social_medias(message)
             case '🍏 درباره ما 🚬':
                 about_us(message)
