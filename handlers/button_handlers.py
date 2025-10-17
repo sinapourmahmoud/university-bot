@@ -1,5 +1,6 @@
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 from utils.locations import locations
+from utils.socialmedia import socialmedias
 
 def register_buttons(bot):
 
@@ -14,6 +15,8 @@ def register_buttons(bot):
                 send_links(message)
             case 'شماره‌ها 📞':
                 send_numbers(message)
+            case '🌐 صفحات مجازی':
+                social_medias(message)
 
 
     def send_location_menu(chat_id):
@@ -55,11 +58,7 @@ def register_buttons(bot):
         bot.edit_message_text(chat_id=call.chat.id,message_id=call.message_id,text=f"📍 یکی را انتخاب کنید:",reply_markup=markup)
         
 
-    def location_details(call,data):
-        for cat in locations:
-            for loc in cat:
-                if loc['data']==data:
-                    bot.send_location(call.chat.id,latitude=loc['latitude'], longitude=loc['longitude'])
+
 
     @bot.callback_query_handler(func=lambda call: True)
     def handle_callback(call):
@@ -73,6 +72,7 @@ def register_buttons(bot):
         
         elif call.data=='back_main':
             edit_to_main(call.message)
+            
         
 
 
@@ -125,5 +125,10 @@ def register_buttons(bot):
 """
         bot.send_message(message.chat.id, text, disable_web_page_preview=True)
 
-
+    def social_medias(message):
+        markup=InlineKeyboardMarkup(row_width=1)
+        for media in socialmedias:
+            markup.add(InlineKeyboardButton(text=media['title'],callback_data=media['data'],url=media['link']))
+        bot.send_message(message.chat.id,text='مارا در صفحات مجازی دنبال کنید',reply_markup=markup)
+        
 

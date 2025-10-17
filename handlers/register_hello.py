@@ -3,7 +3,7 @@ from telebot.types import ReplyKeyboardMarkup
 def register_hello(bot):
     
     wraper=ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=False)
-    wraper.add('📍 مکان‌ها','لیست دروس 📚','🔗 لینک‌ها','شماره‌ها 📞')
+    wraper.add('📍 مکان‌ها','لیست دروس 📚','🔗 لینک‌ها','شماره‌ها 📞','🌐 صفحات مجازی')
     
     @bot.message_handler(commands=['start'])
     def hello(message):
