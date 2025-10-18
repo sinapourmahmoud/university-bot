@@ -1,13 +1,11 @@
 import telebot
 from handlers.register_hello import register_hello
 from handlers.button_handlers import register_buttons
-import dotenv
 import os
 from flask import Flask
 import threading
 
 # Load environment variables
-dotenv.load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
