@@ -22,8 +22,6 @@ def run_web():
 class UniversityBot:
     def __init__(self):
         token = os.getenv('BOT_TOKEN')
-        if not token:
-            raise ValueError("BOT_TOKEN not found in .env file!")
         
         self.bot = telebot.TeleBot(token)
         self._register_handlers()
