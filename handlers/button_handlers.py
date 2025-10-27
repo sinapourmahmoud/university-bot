@@ -136,8 +136,10 @@ def register_buttons(bot):
             bot.send_message(message.chat.id, "🎓 شماره دانشجویی معرف خود را وارد نمایید:")
             bot.register_next_step_handler(message, friend_id_handler)
         except Exception as e:
-            bot.send_message(message.chat.id, f"❌ خطا رخ داد: {e}")
-        
+            bot.send_message(message.chat.id, f"❌ چنین کاربری در سیستم موجود نمیباشد.دوباره امتحان کنید:")
+            
+            bot.register_next_step_handler(message, save_foreign_name)
+
     def friend_id_handler(message):
         try:
             tg_id = str(message.from_user.id)
@@ -155,7 +157,7 @@ def register_buttons(bot):
 
             # 1) Check if friend exists and is a student
             friend = session.query(User).filter_by(student_id_card=friend_id).first()
-            print("this is friend row",friend.is_student)
+            print("this is friend row",friend)
             if not friend:
                 bot.send_message(
                     message.chat.id,
@@ -192,7 +194,9 @@ def register_buttons(bot):
             bot.send_message(message.chat.id, "📸 تصویر فیش واریزی را ارسال نمایید:")
             bot.register_next_step_handler(message, guest_payment_proof)
         except Exception as e:
-            bot.send_message(message.chat.id, f"❌ خطا رخ داد: {e}")
+            bot.send_message(message.chat.id, f"❌ چنین کاربری در سیستم موجود نمیباشد.دوباره امتحان کنید:")
+            return bot.register_next_step_handler(message, friend_id_handler)
+            
     
     
     def guest_payment_proof(message):
