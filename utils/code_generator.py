@@ -1,6 +1,6 @@
 import sqlite3
 from random import randint
-DB_PATH='cinema.db'
+DB_PATH='/data/cinema.db'
 
 
 def generate_unique_code():

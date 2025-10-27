@@ -1,38 +1,30 @@
-import sqlite3
+import os
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-DB_PATH='cinema.db'
+Base = declarative_base()
 
+# Use DATABASE_URL from environment (works locally or on Railway)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-conn=sqlite3.connect(DB_PATH)
+# Create engine and session
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
+session = Session()
 
-cursor=conn.cursor()
+# Define your users table
+class User(Base):
+    __tablename__ = "users"
+    
+    tg_id = Column(Integer, primary_key=True)
+    student_id_card = Column(Integer)
+    full_name = Column(String)
+    is_student = Column(Integer)
+    linked_student_id = Column(Integer)
+    payment_proof_file_id = Column(String)
+    status = Column(String)
+    ticket_code = Column(String)
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    tg_id INTEGER PRIMARY KEY,
-    student_id_card INTEGER,
-    full_name TEXT,
-    is_student INTEGER,
-    linked_student_id INTEGER,
-    payment_proof_file_id TEXT,
-    status TEXT,
-    ticket_code TEXT
-)
-""")
-
-
-# Optional: reset auto-increment counter
-
-
-# conn = sqlite3.connect(DB_PATH)
-# cursor = conn.cursor()
-
-# cursor.execute("SELECT tg_id, full_name, is_student, linked_student_id, payment_proof_file_id, status, ticket_code FROM users")
-# users = cursor.fetchall()
-
-conn.commit()
-conn.close()
-# print(users)
-
-print("✅ Database and table created successfully!")
-
+# Create the table if it doesn't exist
+Base.metadata.create_all(engine)

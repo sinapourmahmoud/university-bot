@@ -8,7 +8,6 @@ import threading
 
 # from dotenv import load_dotenv
 # load_dotenv()
-print("DBG BOT_TOKEN =", os.getenv("BOT_TOKEN"))
 
 # Load environment variables
 # Initialize Flask app

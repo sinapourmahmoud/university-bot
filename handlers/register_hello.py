@@ -1,9 +1,9 @@
 from telebot.types import ReplyKeyboardMarkup,InlineKeyboardButton, InlineKeyboardMarkup
 from utils.code_generator import generate_unique_code
-
+from db import User,session
 import sqlite3
 
-DB_PATH='cinema.db'
+DB_PATH='/data/cinema.db'
 
 ADMIN_IDS=[108738885,428097665]
 
@@ -35,24 +35,31 @@ def register_hello(bot):
         
         
     def handle_database_pending():
-        conn=sqlite3.connect(DB_PATH)
-        
-        cursor=conn.cursor()
-        cursor.execute("SELECT tg_id,full_name,is_student,linked_student_id,payment_proof_file_id,status,ticket_code FROM users WHERE status='waiting_admin'")
-        
+        rows = session.query(
+            User.tg_id,
+            User.full_name,
+            User.is_student,
+            User.linked_student_id,
+            User.payment_proof_file_id,
+            User.status,
+            User.ticket_code
+        ).filter_by(status='waiting_admin').all()
 
-        rows=cursor.fetchall()
-        conn.close()
-        
+        # rows is now a list of tuples like [(tg_id, full_name, ...), ...]
         return rows
 
 
     def update_database(tg_id,status):
-        conn=sqlite3.connect(DB_PATH)
-        cursor=conn.cursor()
-        cursor.execute("UPDATE users SET status=? WHERE tg_id=?",(status,tg_id))
-        conn.commit()
-        conn.close()
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+
+        if user:
+            user.status = status
+            session.commit()
+        else:
+            # Optional: handle missing user
+            user = User(tg_id=tg_id, status=status)
+            session.add(user)
+            session.commit()
 
 
     @bot.message_handler(commands=['admin'])
@@ -77,28 +84,35 @@ def register_hello(bot):
             
     @bot.callback_query_handler(func=lambda c: c.data.startswith(("approve", "reject")))
     def callback_query(call):
-        action,tg_id=call.data.split(":")
-        tg_id=int(tg_id)
+        action, tg_id = call.data.split(":")
+        tg_id = int(tg_id)
+
         if call.from_user.id not in ADMIN_IDS:
             bot.answer_callback_query(call.id, "❌ Not authorized")
             return
-        
-        
+
         if action == "approve":
             update_database(tg_id, "approved")
-            code=generate_unique_code()
-            conn=sqlite3.connect(DB_PATH)
-            cursor = conn.cursor()
-            
-            cursor.execute("UPDATE users SET ticket_code=? WHERE tg_id=?",(code,tg_id))
-            conn.commit()
-            conn.close()
-            
-            bot.send_message(tg_id, f"✅ پرداخت با موفقیت صورت گرفت. کد قرعه کشی شما: [{code}]")
+            code = generate_unique_code()
+
+            # Get user from DB
+            user = session.query(User).filter_by(tg_id=tg_id).first()
+            if user:
+                user.ticket_code = code
+                session.commit()
+                bot.send_message(
+                    tg_id,
+                    f"✅ پرداخت با موفقیت صورت گرفت. کد قرعه کشی شما: [{code}]"
+                )
+
             bot.answer_callback_query(call.id, "Approved ✅")
+
         elif action == "reject":
             update_database(tg_id, "rejected")
-            bot.send_message(tg_id, "❌ پرداخت شما رد شد. لطفا با ادمین در ارتباط باشید ")
+            bot.send_message(
+                tg_id,
+                "❌ پرداخت شما رد شد. لطفا با ادمین در ارتباط باشید"
+            )
             bot.answer_callback_query(call.id, "Rejected ❌")
 
 

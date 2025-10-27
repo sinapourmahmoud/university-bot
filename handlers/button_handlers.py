@@ -2,8 +2,8 @@ from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 from utils.locations import locations
 from utils.socialmedia import socialmedias
 import sqlite3
-
-DB_PATH='cinema.db'
+from db import session,User
+DB_PATH='/data/cinema.db'
 
 
 
@@ -106,23 +106,34 @@ def register_buttons(bot):
         bot.register_next_step_handler(message, save_foreign_name)
         
     def save_foreign_name(message):
-        full_name=message.text.strip()
-        if full_name=='exit':
-            
+
+        full_name = message.text.strip()
+        if full_name.lower() == 'exit':
             cinema_menu(message.chat.id)
             return
-        tg_id=int(message.from_user.id)
-        
-        conn=sqlite3.connect(DB_PATH)
-        cursor=conn.cursor()
-        
-        cursor.execute("""
-            INSERT INTO users (tg_id, full_name, status,is_student)
-            VALUES (?, ?, 'collecting',0)
-            ON CONFLICT(tg_id) DO UPDATE SET full_name=excluded.full_name, status='collecting'
-        """,(tg_id,full_name))
-        conn.commit()
-        conn.close()
+
+        tg_id = int(message.from_user.id)
+
+        # Check if the user already exists
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+
+        if user:
+            # Update existing user
+            user.full_name = full_name
+            user.status = 'collecting'
+            user.is_student = 0
+        else:
+            # Insert new user
+            user = User(
+                tg_id=tg_id,
+                full_name=full_name,
+                status='collecting',
+                is_student=0
+            )
+            session.add(user)
+
+        session.commit()
+
         bot.send_message(message.chat.id, "🎓 شماره دانشجویی معرف خود را وارد نمایید:")
         bot.register_next_step_handler(message, friend_id_handler)
         
@@ -130,119 +141,164 @@ def register_buttons(bot):
     def friend_id_handler(message):
         tg_id = int(message.from_user.id)
         friend_id_text = message.text.strip()
-        if friend_id_text=='exit':
+
+        if friend_id_text.lower() == 'exit':
             cinema_menu(message.chat.id)
             return
+
         if not friend_id_text.isdigit():
             bot.send_message(message.chat.id, "❌ فقط عدد قابل قبول است:")
             return bot.register_next_step_handler(message, friend_id_handler)
+
         friend_id = int(friend_id_text)
-        
         print(friend_id)
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute("SELECT is_student FROM users WHERE student_id_card=?",(friend_id,))
-        row = cur.fetchone()
-        
-        conn.close()
 
-        if not row:
-            bot.send_message(message.chat.id,
-                            "❌ چنین کاربری در سیستم موجود نمیباشد.دوباره امتحان کنید:")
+        # 1) Check if friend exists and is a student
+        friend = session.query(User).filter_by(student_id_card=friend_id).first()
+
+        if not friend:
+            bot.send_message(
+                message.chat.id,
+                "❌ چنین کاربری در سیستم موجود نمیباشد.دوباره امتحان کنید:"
+            )
             return bot.register_next_step_handler(message, friend_id_handler)
 
-        if row[0] != 1:  # not a student
-            bot.send_message(message.chat.id,
-                            "❌ چنین کاربری به عنوان دانشجو ثبت نشده است.لطفا دوباره امتحان کنید:")
+        if friend.is_student != 1:
+            bot.send_message(
+                message.chat.id,
+                "❌ چنین کاربری به عنوان دانشجو ثبت نشده است.لطفا دوباره امتحان کنید:"
+            )
             return bot.register_next_step_handler(message, friend_id_handler)
 
-        # 3) If valid → save for guest
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute("""
-            UPDATE users
-            SET is_student=0, linked_student_id=?, status='collecting'
-            WHERE tg_id=?
-        """, (friend_id, tg_id))
-        conn.commit()
-        conn.close()
+        # 2) Save linked_student_id for guest
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+
+        if user:
+            user.is_student = 0
+            user.linked_student_id = friend_id
+            user.status = 'collecting'
+        else:
+            # Optional: handle missing user
+            user = User(
+                tg_id=tg_id,
+                is_student=0,
+                linked_student_id=friend_id,
+                status='collecting'
+            )
+            session.add(user)
+
+        session.commit()
+
         bot.send_message(message.chat.id, "📸 تصویر فیش واریزی را ارسال نمایید:")
         bot.register_next_step_handler(message, guest_payment_proof)
     
     
     
     def guest_payment_proof(message):
-        if message.text:
-            if message.text=='exit':
-                cinema_menu(message.chat.id)
-                return
+        if message.text and message.text.lower() == 'exit':
+            cinema_menu(message.chat.id)
+            return
+
         tg_id = int(message.from_user.id)
-        
+
         if not message.photo:
             bot.send_message(message.chat.id, "❌ لطفا عکس بفرستید.")
             return bot.register_next_step_handler(message, guest_payment_proof)
 
-        # 2) Get highest resolution photo file_id
+        # Get highest resolution photo file_id
         file_id = message.photo[-1].file_id
 
-        # 3) Save in DB
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute("""
-            UPDATE users
-            SET payment_proof_file_id=?, status='waiting_admin'
-            WHERE tg_id=?
-        """, (file_id, tg_id))
-        conn.commit()
-        conn.close()
+        # Get the user
+        user = session.query(User).filter_by(tg_id=tg_id).first()
 
-        # 4) Inform user
-        bot.send_message(message.chat.id, "✅ فیش دریافت شد. لظفا منتظر تایید ادمین باشید")
+        if user:
+            user.payment_proof_file_id = file_id
+            user.status = 'waiting_admin'
+        else:
+            # Optional: handle missing user
+            user = User(
+                tg_id=tg_id,
+                payment_proof_file_id=file_id,
+                status='waiting_admin'
+            )
+            session.add(user)
+
+        session.commit()
+
+        bot.send_message(
+            message.chat.id,
+            "✅ فیش دریافت شد. لطفا منتظر تایید ادمین باشید"
+        )
     
     
     def save_name(message):
-        full_name=message.text.strip()
-        if full_name=='exit':
+
+
+        full_name = message.text.strip()
+        if full_name.lower() == 'exit':
             cinema_menu(message.chat.id)
             return
-        tg_id=int(message.from_user.id)
-        
-        conn=sqlite3.connect(DB_PATH)
-        cursor=conn.cursor()
-        
-        cursor.execute("""
-            INSERT INTO users (tg_id, full_name, status,is_student)
-            VALUES (?, ?, 'collecting',1)
-            ON CONFLICT(tg_id) DO UPDATE SET full_name=excluded.full_name, status='collecting'
-        """, (tg_id, full_name))
-        conn.commit()
-        conn.close()
+
+        tg_id = int(message.from_user.id)
+
+        # Check if the user already exists
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+
+        if user:
+            # Update existing user
+            user.full_name = full_name
+            user.status = 'collecting'
+        else:
+            # Insert new user
+            user = User(
+                tg_id=tg_id,
+                full_name=full_name,
+                status='collecting',
+                is_student=1
+            )
+            session.add(user)
+
+        session.commit()
 
         bot.send_message(message.chat.id, "🎓 شماره دانشجویی خود را وارد نمایید:")
         bot.register_next_step_handler(message, save_id_card)
+
+        
+
        
     
     
     def save_id_card(message):
         
-        student_id=message.text.strip()
-        tg_id=int(message.from_user.id)
-        if student_id=='exit':
+        student_id = message.text.strip()
+        tg_id = int(message.from_user.id)
+
+        if student_id.lower() == 'exit':
             cinema_menu(message.chat.id)
             return
+
         if not student_id.isdigit():
             bot.register_next_step_handler(message, save_id_card)
-            
             return
-        
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute("""
-            UPDATE users SET is_student=1, student_id_card=?, status='collecting'
-            WHERE tg_id=?
-        """, (int(student_id), tg_id))
-        conn.commit()
-        conn.close()
+
+        # Get the user
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+
+        if user:
+            user.is_student = 1
+            user.student_id_card = int(student_id)
+            user.status = 'collecting'
+            session.commit()
+        else:
+            # Optional: handle if user not found (should not happen if flow is correct)
+            user = User(
+                tg_id=tg_id,
+                student_id_card=int(student_id),
+                is_student=1,
+                status='collecting'
+            )
+            session.add(user)
+            session.commit()
 
         bot.send_message(message.chat.id, "📸 تصویر فیش واریزی را ارسال نمایید:")
         bot.register_next_step_handler(message, wait_for_payment_photo)
@@ -250,29 +306,36 @@ def register_buttons(bot):
 
     def wait_for_payment_photo(message):
         
-        if message.text:
-            if message.text=='exit':
-                cinema_menu(message.chat.id)
-                return
+        if message.text and message.text.lower() == 'exit':
+            cinema_menu(message.chat.id)
+            return
+
         if not message.photo:
             bot.send_message(message.chat.id, "❌ لطفا عکس بفرستید.")
             bot.register_next_step_handler(message, wait_for_payment_photo)
             return
-        
+
         file_id = message.photo[-1].file_id
         tg_id = int(message.from_user.id)
 
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute("""
-            UPDATE users
-            SET payment_proof_file_id=?, status='waiting_admin'
-            WHERE tg_id=?
-        """, (file_id, tg_id))
-        conn.commit()
-        conn.close()
+        # Get the user
+        user = session.query(User).filter_by(tg_id=tg_id).first()
 
-        bot.send_message(message.chat.id, "✅ فیش دریافت شد. لظفا منتظر تایید ادمین باشید")
+        if user:
+            user.payment_proof_file_id = file_id
+            user.status = 'waiting_admin'
+            session.commit()
+        else:
+            # Optional: handle missing user
+            user = User(
+                tg_id=tg_id,
+                payment_proof_file_id=file_id,
+                status='waiting_admin'
+            )
+            session.add(user)
+            session.commit()
+
+        bot.send_message(message.chat.id, "✅ فیش دریافت شد. لطفا منتظر تایید ادمین باشید")
     
     
     def send_locations(message, data):
