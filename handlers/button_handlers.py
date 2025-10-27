@@ -192,6 +192,15 @@ def register_buttons(bot):
             session.commit()
 
             bot.send_message(message.chat.id, "📸 تصویر فیش واریزی را ارسال نمایید:")
+            text = """💳 اطلاعات پرداخت
+
+            ۶۱۰۴۳۳۷۵۶۵۲۳۳۹۹۴
+            بانک ملت
+            به نام: بهزاد پورمحمود آقابابا
+            """
+
+            bot.send_message(message.chat.id, text)
+
             bot.register_next_step_handler(message, guest_payment_proof)
         except Exception as e:
             bot.send_message(message.chat.id, f"❌ چنین کاربری در سیستم موجود نمیباشد.دوباره امتحان کنید:")
@@ -310,6 +319,14 @@ def register_buttons(bot):
                 session.commit()
 
             bot.send_message(message.chat.id, "📸 تصویر فیش واریزی را ارسال نمایید:")
+            text = """💳 اطلاعات پرداخت
+
+            ۶۱۰۴۳۳۷۵۶۵۲۳۳۹۹۴
+            بانک ملت
+            به نام: بهزاد پورمحمود آقابابا
+            """
+
+            bot.send_message(message.chat.id, text)
             bot.register_next_step_handler(message, wait_for_payment_photo)
         except Exception as e:
             bot.send_message(message.chat.id, f"❌ خطا رخ داد: {e}")
