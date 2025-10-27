@@ -112,7 +112,7 @@ def register_buttons(bot):
                 cinema_menu(message.chat.id)
                 return
 
-            tg_id = message.from_user.id
+            tg_id = str(message.from_user.id)
 
             # Check if the user already exists
             user = session.query(User).filter_by(tg_id=tg_id).first()
