@@ -85,7 +85,7 @@ def register_hello(bot):
     @bot.callback_query_handler(func=lambda c: c.data.startswith(("approve", "reject")))
     def callback_query(call):
         action, tg_id = call.data.split(":")
-        tg_id = int(tg_id)
+        tg_id = tg_id
 
         if call.from_user.id not in ADMIN_IDS:
             bot.answer_callback_query(call.id, "❌ Not authorized")

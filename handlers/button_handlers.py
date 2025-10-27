@@ -112,7 +112,7 @@ def register_buttons(bot):
                 cinema_menu(message.chat.id)
                 return
 
-            tg_id = int(message.from_user.id)
+            tg_id = message.from_user.id
 
             # Check if the user already exists
             user = session.query(User).filter_by(tg_id=tg_id).first()
@@ -141,7 +141,7 @@ def register_buttons(bot):
         
     def friend_id_handler(message):
         try:
-            tg_id = int(message.from_user.id)
+            tg_id = message.from_user.id
             friend_id_text = message.text.strip()
 
             if friend_id_text.lower() == 'exit':
@@ -152,7 +152,7 @@ def register_buttons(bot):
                 bot.send_message(message.chat.id, "❌ فقط عدد قابل قبول است:")
                 return bot.register_next_step_handler(message, friend_id_handler)
 
-            friend_id = int(friend_id_text)
+            friend_id = friend_id_text
             print(friend_id)
 
             # 1) Check if friend exists and is a student
@@ -203,7 +203,7 @@ def register_buttons(bot):
                 cinema_menu(message.chat.id)
                 return
 
-            tg_id = int(message.from_user.id)
+            tg_id = message.from_user.id
 
             if not message.photo:
                 bot.send_message(message.chat.id, "❌ لطفا عکس بفرستید.")
@@ -244,7 +244,7 @@ def register_buttons(bot):
                 cinema_menu(message.chat.id)
                 return
 
-            tg_id = int(message.from_user.id)
+            tg_id = message.from_user.id
 
             # Check if the user already exists
             user = session.query(User).filter_by(tg_id=tg_id).first()
@@ -278,7 +278,7 @@ def register_buttons(bot):
     def save_id_card(message):
         try:
             student_id = message.text.strip()
-            tg_id = int(message.from_user.id)
+            tg_id = message.from_user.id
 
             if student_id.lower() == 'exit':
                 cinema_menu(message.chat.id)
@@ -293,14 +293,14 @@ def register_buttons(bot):
 
             if user:
                 user.is_student = 1
-                user.student_id_card = int(student_id)
+                user.student_id_card = student_id
                 user.status = 'collecting'
                 session.commit()
             else:
                 # Optional: handle if user not found (should not happen if flow is correct)
                 user = User(
                     tg_id=tg_id,
-                    student_id_card=int(student_id),
+                    student_id_card=student_id,
                     is_student=1,
                     status='collecting'
                 )
@@ -324,7 +324,7 @@ def register_buttons(bot):
                 return
 
             file_id = message.photo[-1].file_id
-            tg_id = int(message.from_user.id)
+            tg_id = message.from_user.id
 
             # Get the user
             user = session.query(User).filter_by(tg_id=tg_id).first()

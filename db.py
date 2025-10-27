@@ -18,11 +18,11 @@ session = Session()
 class User(Base):
     __tablename__ = "users"
     
-    tg_id = Column(Integer, primary_key=True)
-    student_id_card = Column(BigInteger)
+    tg_id = Column(String(20), primary_key=True)
+    student_id_card = Column(String(20), nullable=True)
     full_name = Column(String)
     is_student = Column(Integer)
-    linked_student_id = Column(Integer)
+    linked_student_id = Column(String(20), nullable=True)
     payment_proof_file_id = Column(String)
     status = Column(String)
     ticket_code = Column(String)
