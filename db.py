@@ -18,7 +18,7 @@ session = Session()
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    tg_id = Column(String(20))
+    tg_id = Column(String(20),unique=True)
     student_id_card = Column(String(20), nullable=True)
     full_name = Column(String)
     is_student = Column(Integer)

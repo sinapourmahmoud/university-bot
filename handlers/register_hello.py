@@ -1,7 +1,6 @@
 from telebot.types import ReplyKeyboardMarkup,InlineKeyboardButton, InlineKeyboardMarkup
 from utils.code_generator import generate_unique_code
 from db import User,session
-import sqlite3
 
 DB_PATH='/data/cinema.db'
 

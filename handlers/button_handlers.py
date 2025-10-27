@@ -1,7 +1,6 @@
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 from utils.locations import locations
 from utils.socialmedia import socialmedias
-import sqlite3
 from db import session,User
 DB_PATH='/data/cinema.db'
 
