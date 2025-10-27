@@ -157,7 +157,7 @@ def register_buttons(bot):
 
             # 1) Check if friend exists and is a student
             friend = session.query(User).filter_by(student_id_card=friend_id).first()
-            print("this is friend row",friend)
+            print("this is friend row",friend.is_student)
             if not friend:
                 bot.send_message(
                     message.chat.id,
