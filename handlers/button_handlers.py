@@ -474,7 +474,7 @@ def register_buttons(bot):
             InlineKeyboardButton("۹۵,۰۰۰ تومان", callback_data='foreign'),
             
         )
-        bot.send_message(chat_id, "لطفا مبلغ مورد نظر را انتخاب کتید", reply_markup=markup)
+        bot.send_message(chat_id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
         
     
 

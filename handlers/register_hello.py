@@ -84,7 +84,7 @@ def register_hello(bot):
     @bot.callback_query_handler(func=lambda c: c.data.startswith(("approve", "reject")))
     def callback_query(call):
         action, tg_id = call.data.split(":")
-        tg_id = tg_id
+
 
         if call.from_user.id not in ADMIN_IDS:
             bot.answer_callback_query(call.id, "❌ Not authorized")
@@ -103,6 +103,8 @@ def register_hello(bot):
                     tg_id,
                     f"✅ پرداخت با موفقیت صورت گرفت. کد قرعه کشی شما: [{code}]"
                 )
+                bot.send_location(tg_id, latitude=38.0750191, longitude=46.2846011)
+                bot.send_message(tg_id,"سینما ۲۹ بهمن تبریز")
 
             bot.answer_callback_query(call.id, "Approved ✅")
 
