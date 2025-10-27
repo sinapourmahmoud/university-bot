@@ -60,7 +60,6 @@ def register_hello(bot):
         if message.from_user.id not in ADMIN_IDS:
             bot.reply_to(message, "❌ You are not authorized.")
             return 
-        bot.reply_to(message,"siktir icharieh")
         pending = handle_database_pending()
         if not pending:
             bot.send_message(message.chat.id, "✅ No pending payments.")
