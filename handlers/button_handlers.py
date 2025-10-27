@@ -232,36 +232,38 @@ def register_buttons(bot):
     
     
     def save_name(message):
+        try:
 
+            full_name = message.text.strip()
+            if full_name.lower() == 'exit':
+                cinema_menu(message.chat.id)
+                return
 
-        full_name = message.text.strip()
-        if full_name.lower() == 'exit':
-            cinema_menu(message.chat.id)
-            return
+            tg_id = int(message.from_user.id)
 
-        tg_id = int(message.from_user.id)
+            # Check if the user already exists
+            user = session.query(User).filter_by(tg_id=tg_id).first()
 
-        # Check if the user already exists
-        user = session.query(User).filter_by(tg_id=tg_id).first()
+            if user:
+                # Update existing user
+                user.full_name = full_name
+                user.status = 'collecting'
+            else:
+                # Insert new user
+                user = User(
+                    tg_id=tg_id,
+                    full_name=full_name,
+                    status='collecting',
+                    is_student=1
+                )
+                session.add(user)
 
-        if user:
-            # Update existing user
-            user.full_name = full_name
-            user.status = 'collecting'
-        else:
-            # Insert new user
-            user = User(
-                tg_id=tg_id,
-                full_name=full_name,
-                status='collecting',
-                is_student=1
-            )
-            session.add(user)
+            session.commit()
 
-        session.commit()
-
-        bot.send_message(message.chat.id, "🎓 شماره دانشجویی خود را وارد نمایید:")
-        bot.register_next_step_handler(message, save_id_card)
+            bot.send_message(message.chat.id, "🎓 شماره دانشجویی خود را وارد نمایید:")
+            bot.register_next_step_handler(message, save_id_card)
+        except Exception as e:
+            bot.send_message(message.chat.id, f"❌ خطا رخ داد: {e}")
 
         
 

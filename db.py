@@ -8,6 +8,7 @@ Base = declarative_base()
 # Use DATABASE_URL from environment (works locally or on Railway)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+
 # Create engine and session
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
