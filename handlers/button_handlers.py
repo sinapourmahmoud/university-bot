@@ -141,7 +141,7 @@ def register_buttons(bot):
         
     def friend_id_handler(message):
         try:
-            tg_id = message.from_user.id
+            tg_id = str(message.from_user.id)
             friend_id_text = message.text.strip()
 
             if friend_id_text.lower() == 'exit':
@@ -203,7 +203,7 @@ def register_buttons(bot):
                 cinema_menu(message.chat.id)
                 return
 
-            tg_id = message.from_user.id
+            tg_id = str(message.from_user.id)
 
             if not message.photo:
                 bot.send_message(message.chat.id, "❌ لطفا عکس بفرستید.")
@@ -244,7 +244,7 @@ def register_buttons(bot):
                 cinema_menu(message.chat.id)
                 return
 
-            tg_id = message.from_user.id
+            tg_id = str(message.from_user.id)
 
             # Check if the user already exists
             user = session.query(User).filter_by(tg_id=tg_id).first()
@@ -278,7 +278,7 @@ def register_buttons(bot):
     def save_id_card(message):
         try:
             student_id = message.text.strip()
-            tg_id = message.from_user.id
+            tg_id = str(message.from_user.id)
 
             if student_id.lower() == 'exit':
                 cinema_menu(message.chat.id)
@@ -324,7 +324,7 @@ def register_buttons(bot):
                 return
 
             file_id = message.photo[-1].file_id
-            tg_id = message.from_user.id
+            tg_id = str(message.from_user.id)
 
             # Get the user
             user = session.query(User).filter_by(tg_id=tg_id).first()
