@@ -142,17 +142,16 @@ def register_buttons(bot):
     def friend_id_handler(message):
         try:
             tg_id = str(message.from_user.id)
-            friend_id_text = message.text.strip()
+            friend_id = message.text.strip()
 
-            if friend_id_text.lower() == 'exit':
+            if friend_id.lower() == 'exit':
                 cinema_menu(message.chat.id)
                 return
 
-            if not friend_id_text.isdigit():
+            if not friend_id.isdigit():
                 bot.send_message(message.chat.id, "❌ فقط عدد قابل قبول است:")
                 return bot.register_next_step_handler(message, friend_id_handler)
 
-            friend_id = friend_id_text
             print(friend_id)
 
             # 1) Check if friend exists and is a student
