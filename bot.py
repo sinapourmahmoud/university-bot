@@ -4,9 +4,9 @@ from handlers.button_handlers import register_buttons
 import os
 from flask import Flask
 import threading
-
+from dotenv import load_dotenv
 # Load environment variables
-
+load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
