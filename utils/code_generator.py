@@ -1,13 +1,12 @@
-import sqlite3
 from random import randint
-DB_PATH='/data/cinema.db'
-
+from db import session, User   
 
 def generate_unique_code():
-    with sqlite3.connect(DB_PATH) as conn:
-        cur = conn.cursor()
-        while True:
-            code = f"CINE-{randint(1,10000):05d}"
-            cur.execute("SELECT 1 FROM users WHERE ticket_code=?", (code,))
-            if not cur.fetchone():
-                return code
+    while True:
+        code = f"CINE-{randint(1,10000):05d}"
+
+        # check if exists in Postgres
+        exists = session.query(User).filter_by(ticket_code=code).first()
+
+        if not exists:
+            return code
