@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String,BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -19,7 +19,7 @@ class User(Base):
     __tablename__ = "users"
     
     tg_id = Column(Integer, primary_key=True)
-    student_id_card = Column(Integer)
+    student_id_card = Column(BigInteger)
     full_name = Column(String)
     is_student = Column(Integer)
     linked_student_id = Column(Integer)
