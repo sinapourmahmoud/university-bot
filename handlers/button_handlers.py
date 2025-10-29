@@ -477,8 +477,8 @@ def register_buttons(bot):
 
 
     def cinema_menu(message):
-        
-        user = session.query(User).filter_by(tg_id=message.from_user.id).first()
+        print(message.fomr_user.id)
+        user = session.query(User).filter_by(tg_id=str(message.from_user.id)).first()
         if user:
             bot.send_message("شما ثبت نام کرده اید")
             return
