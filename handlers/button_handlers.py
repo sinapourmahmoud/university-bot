@@ -481,7 +481,7 @@ def register_buttons(bot):
         user = session.query(User).filter_by(tg_id=str(message.from_user.id)).first()
         if user:
             if user.status=='approved' or user.status=='waiting_admin':
-                bot.send_message("شما ثبت نام کرده اید")
+                bot.send_message(message.chat.id,"شما ثبت نام کرده اید")
                 return
         msg = bot.send_message(message.chat.id, "برای خروج کلمه exit را تایپ نمایید.")
         bot.pin_chat_message(message.chat.id, msg.message_id)
