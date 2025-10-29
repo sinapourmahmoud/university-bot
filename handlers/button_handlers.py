@@ -10,6 +10,16 @@ def register_buttons(bot):
 
     @bot.message_handler(func=lambda msg: True)
     def buttons(message):
+        
+        tg_id = str(message.from_user.id)
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+
+    # Block only if user is currently inside flow
+        if user and user.status == 'collecting':
+        # allow only "exit"
+            if message.text and message.text.lower() == 'exit':
+                cinema_menu(message.chat.id)
+                return  # BLOCK ALL OTHER ACTIONS
         match message.text:
             case '📍 مکان‌ها':
                 send_location_menu(message.chat.id)
@@ -70,6 +80,11 @@ def register_buttons(bot):
 
     @bot.callback_query_handler(func=lambda call: True)
     def handle_callback(call):
+        tg_id = str(call.from_user.id)
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+
+        if user and user.status == 'collecting':
+            return  # Ignore all buttons during flow
         print(f"CALLBACK RECEIVED: {call.data}")  
 
         if 'cat-' in call.data:
@@ -106,12 +121,13 @@ def register_buttons(bot):
         
     def save_foreign_name(message):
         try:
+            tg_id = str(message.from_user.id)
             full_name = message.text.strip()
             if full_name.lower() == 'exit':
-                cinema_menu(message.chat.id)
+                exit_and_delete_user(tg_id,message.chat.id)
                 return
 
-            tg_id = str(message.from_user.id)
+            
 
             # Check if the user already exists
             user = session.query(User).filter_by(tg_id=tg_id).first()
@@ -146,7 +162,7 @@ def register_buttons(bot):
             friend_id = message.text.strip()
 
             if friend_id.lower() == 'exit':
-                cinema_menu(message.chat.id)
+                exit_and_delete_user(tg_id,message.chat.id)
                 return
 
             if not friend_id.isdigit():
@@ -210,11 +226,12 @@ def register_buttons(bot):
     
     def guest_payment_proof(message):
         try:
+            tg_id = str(message.from_user.id)
             if message.text and message.text.lower() == 'exit':
-                cinema_menu(message.chat.id)
+                exit_and_delete_user(tg_id,message.chat.id)
                 return
 
-            tg_id = str(message.from_user.id)
+            
 
             if not message.photo:
                 bot.send_message(message.chat.id, "❌ لطفا عکس بفرستید.")
@@ -292,7 +309,7 @@ def register_buttons(bot):
             tg_id = str(message.from_user.id)
 
             if student_id.lower() == 'exit':
-                cinema_menu(message.chat.id)
+                exit_and_delete_user(tg_id,message.chat.id)
                 return
 
             if not student_id.isdigit():
@@ -332,9 +349,10 @@ def register_buttons(bot):
             bot.send_message(message.chat.id, f"❌ خطا رخ داد: {e}")
 
     def wait_for_payment_photo(message):
+        tg_id = str(message.from_user.id)
         try:
             if message.text and message.text.lower() == 'exit':
-                cinema_menu(message.chat.id)
+                exit_and_delete_user(tg_id,message.chat.id)
                 return
 
             if not message.photo:
@@ -476,5 +494,10 @@ def register_buttons(bot):
         )
         bot.send_message(chat_id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
         
-    
+    def exit_and_delete_user(tg_id, chat_id):
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+        if user:
+            session.delete(user)
+            session.commit()
+        cinema_menu(chat_id)
 

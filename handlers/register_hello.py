@@ -15,6 +15,12 @@ def register_hello(bot):
     
     @bot.message_handler(commands=['start'])
     def hello(message):
+        tg_id = str(message.from_user.id)
+        user = session.query(User).filter_by(tg_id=tg_id).first()
+    
+        if user and user.status == 'collecting':
+            bot.send_message(message.chat.id, "⛔ شما در جریان ثبت‌نام سینما هستید. ابتدا exit را بزنید.")
+            return
         name=message.from_user.first_name
         bot.send_message(message.chat.id,f"""
                          
