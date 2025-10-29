@@ -34,7 +34,7 @@ def register_buttons(bot):
             case '🍏 درباره ما 🚬':
                 about_us(message)
             case 'بریم سینما 🎬':
-                cinema_menu(message.chat.id)
+                cinema_menu(message)
 
 
     def send_location_menu(chat_id):
@@ -476,11 +476,17 @@ def register_buttons(bot):
         bot.send_message(message.chat.id,"تهیه‌شده با ❤️")
 
 
-    def cinema_menu(chat_id):
+    def cinema_menu(message):
         
+        user = session.query(User).filter_by(tg_id=message.from_user.id).first()
+        if user:
+            bot.send_message("شما ثبت نام کرده اید")
+            return
+        msg = bot.send_message(message.chat.id, "برای خروج کلمه exit را تایپ نمایید.")
+        bot.pin_chat_message(message.chat.id, msg.message_id)
         
         with open('./utils/documents/poster.jpg','rb') as photo:
-            bot.send_photo(chat_id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
+            bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
 🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۸۵٬۰۰۰ تومان
 🙋🏻 برای مهمان‌های خارج دانشکده: ۹۵٬۰۰۰ تومان
 📌 نکته مهم:
@@ -488,14 +494,14 @@ def register_buttons(bot):
 🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
         
         
-        bot.send_message(chat_id,"توجه: هرکاربر فقط میتواند با یک اکانت ثبت نام کند")
+        bot.send_message(message.chat.id,"توجه: هرکاربر فقط میتواند با یک اکانت ثبت نام کند")
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("۸۵,۰۰۰ تومان", callback_data='student'),
-            InlineKeyboardButton("۹۵,۰۰۰ تومان", callback_data='foreign'),
+            InlineKeyboardButton("۸۵,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
+            InlineKeyboardButton("۹۵,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
             
         )
-        bot.send_message(chat_id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
+        bot.send_message(message.chat.id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
         
     def exit_and_delete_user(tg_id, chat_id):
         user = session.query(User).filter_by(tg_id=tg_id).first()
@@ -503,4 +509,5 @@ def register_buttons(bot):
             session.delete(user)
             session.commit()
         cinema_menu(chat_id)
+        
 
