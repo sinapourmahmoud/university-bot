@@ -471,6 +471,9 @@ def register_buttons(bot):
 📍 انجمن علمی علوم کامپیوتر دانشگاه تبریز — جایی برای ایده‌ها، خلاقیت و دوستی 🤍
 """
         bot.send_message(message.chat.id, text, parse_mode="Markdown")
+        with open('./utils/documents/anjoman.pdf', 'rb') as doc:
+            bot.send_document(message.chat.id, doc, caption='معرفی‌نامه انجمن علمی گروه علوم کامپیوتر دانشگاه تبریز − ۱۴۰۴')
+        bot.send_message(message.chat.id,"تهیه‌شده با ❤️")
 
 
     def cinema_menu(chat_id):
