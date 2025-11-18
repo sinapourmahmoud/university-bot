@@ -124,7 +124,7 @@ def register_buttons(bot):
             tg_id = str(message.from_user.id)
             full_name = message.text.strip()
             if full_name.lower() == 'exit':
-                exit_and_delete_user(tg_id,message.chat.id)
+                exit_and_delete_user(tg_id,message)
                 return
 
             
@@ -162,7 +162,7 @@ def register_buttons(bot):
             friend_id = message.text.strip()
 
             if friend_id.lower() == 'exit':
-                exit_and_delete_user(tg_id,message.chat.id)
+                exit_and_delete_user(tg_id,message)
                 return
 
             if not friend_id.isdigit():
@@ -228,7 +228,7 @@ def register_buttons(bot):
         try:
             tg_id = str(message.from_user.id)
             if message.text and message.text.lower() == 'exit':
-                exit_and_delete_user(tg_id,message.chat.id)
+                exit_and_delete_user(tg_id,message)
                 return
 
             
@@ -309,7 +309,7 @@ def register_buttons(bot):
             tg_id = str(message.from_user.id)
 
             if student_id.lower() == 'exit':
-                exit_and_delete_user(tg_id,message.chat.id)
+                exit_and_delete_user(tg_id,message)
                 return
 
             if not student_id.isdigit():
@@ -352,7 +352,7 @@ def register_buttons(bot):
         tg_id = str(message.from_user.id)
         try:
             if message.text and message.text.lower() == 'exit':
-                exit_and_delete_user(tg_id,message.chat.id)
+                exit_and_delete_user(tg_id,message)
                 return
 
             if not message.photo:
@@ -488,8 +488,8 @@ def register_buttons(bot):
         
         with open('./utils/documents/poster.jpg','rb') as photo:
             bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
-🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۸۵٬۰۰۰ تومان
-🙋🏻 برای مهمان‌های خارج دانشکده: ۹۵٬۰۰۰ تومان
+🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۶۵٬۰۰۰ تومان
+🙋🏻 برای مهمان‌های خارج دانشکده: ۷۵٬۰۰۰ تومان
 📌 نکته مهم:
 مهمان‌های خارج از دانشکده برای ثبت‌نام نیاز به معرف از داخل دانشکده دارن. (یعنی یکی از بچه‌های دانشکده اول باید ثبت‌نام کنه و بعد بتونه معرف دوستش بشه).
 🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
@@ -498,17 +498,17 @@ def register_buttons(bot):
         bot.send_message(message.chat.id,"توجه: هرکاربر فقط میتواند با یک اکانت ثبت نام کند")
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("۸۵,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
-            InlineKeyboardButton("۹۵,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
+            InlineKeyboardButton("۶۵,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
+            InlineKeyboardButton("۷۵,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
             
         )
         bot.send_message(message.chat.id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
         
-    def exit_and_delete_user(tg_id, chat_id):
+    def exit_and_delete_user(tg_id, message):
         user = session.query(User).filter_by(tg_id=tg_id).first()
         if user:
             session.delete(user)
             session.commit()
-        cinema_menu(chat_id)
+        cinema_menu(message)
         
 
