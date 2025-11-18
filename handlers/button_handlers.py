@@ -18,7 +18,7 @@ def register_buttons(bot):
         if user and user.status == 'collecting':
         # allow only "exit"
             if message.text and message.text.lower() == 'exit':
-                cinema_menu(message.chat.id)
+                cinema_menu(message)
                 return  # BLOCK ALL OTHER ACTIONS
         match message.text:
             case '📍 مکان‌ها':
@@ -269,7 +269,7 @@ def register_buttons(bot):
 
             full_name = message.text.strip()
             if full_name.lower() == 'exit':
-                cinema_menu(message.chat.id)
+                cinema_menu(message)
                 return
 
             tg_id = str(message.from_user.id)
