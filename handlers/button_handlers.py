@@ -488,8 +488,8 @@ def register_buttons(bot):
         
         with open('./utils/documents/poster.jpg','rb') as photo:
             bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
-🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۶۵٬۰۰۰ تومان
-🙋🏻 برای مهمان‌های خارج دانشکده: ۷۵٬۰۰۰ تومان
+🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۷۰٬۰۰۰ تومان
+🙋🏻 برای مهمان‌های خارج دانشکده: ۸۰٬۰۰۰ تومان
 📌 نکته مهم:
 مهمان‌های خارج از دانشکده برای ثبت‌نام نیاز به معرف از داخل دانشکده دارن. (یعنی یکی از بچه‌های دانشکده اول باید ثبت‌نام کنه و بعد بتونه معرف دوستش بشه).
 🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
@@ -498,8 +498,8 @@ def register_buttons(bot):
         bot.send_message(message.chat.id,"توجه: هرکاربر فقط میتواند با یک اکانت ثبت نام کند")
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("۶۵,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
-            InlineKeyboardButton("۷۵,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
+            InlineKeyboardButton("۷۰,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
+            InlineKeyboardButton("۸۰,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
             
         )
         bot.send_message(message.chat.id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
