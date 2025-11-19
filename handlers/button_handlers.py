@@ -483,8 +483,7 @@ def register_buttons(bot):
             if user.status=='approved' or user.status=='waiting_admin':
                 bot.send_message(message.chat.id,"شما ثبت نام کرده اید")
                 return
-        msg = bot.send_message(message.chat.id, "برای خروج کلمه exit را تایپ نمایید.")
-        bot.pin_chat_message(message.chat.id, msg.message_id)
+
         
         with open('./utils/documents/h1.jpg','rb') as photo:
             bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
@@ -495,7 +494,10 @@ def register_buttons(bot):
 🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
         
         
-        bot.send_message(message.chat.id,"توجه: هرکاربر فقط میتواند با یک اکانت ثبت نام کند")
+        bot.send_message(message.chat.id,"""
+    🔺لطفا در نظر داشته باشین هر اکانت تنها یک‌بار مجاز به ثبت‌نام هست.\n
+در صورت تعدد ثبت‌نام اطلاعاتتون از دیتابیس حذف میشه.
+""")
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
             InlineKeyboardButton("۷۰,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
