@@ -486,7 +486,7 @@ def register_buttons(bot):
         msg = bot.send_message(message.chat.id, "برای خروج کلمه exit را تایپ نمایید.")
         bot.pin_chat_message(message.chat.id, msg.message_id)
         
-        with open('./utils/documents/poster.jpg','rb') as photo:
+        with open('./utils/documents/h1.jpg','rb') as photo:
             bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
 🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۷۰٬۰۰۰ تومان
 🙋🏻 برای مهمان‌های خارج دانشکده: ۸۰٬۰۰۰ تومان
