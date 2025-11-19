@@ -313,8 +313,9 @@ def register_buttons(bot):
                 return
 
             if not student_id.isdigit():
-                bot.register_next_step_handler(message, save_id_card)
-                return
+                bot.send_message(message.chat.id, "❌ فقط عدد قابل قبول است:")
+                return bot.register_next_step_handler(message, save_id_card)
+                
 
             # Get the user
             user = session.query(User).filter_by(tg_id=tg_id).first()
