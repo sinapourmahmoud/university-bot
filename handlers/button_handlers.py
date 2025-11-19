@@ -485,7 +485,7 @@ def register_buttons(bot):
                 return
 
         
-        with open('./utils/documents/filmposter.jpg','rb') as photo:
+        with open('./utils/documents/poster.jpg','rb') as photo:
             bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
 🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۷۰٬۰۰۰ تومان
 🙋🏻 برای مهمان‌های خارج دانشکده: ۸۰٬۰۰۰ تومان
