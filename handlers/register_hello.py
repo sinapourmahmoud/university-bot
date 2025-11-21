@@ -109,7 +109,7 @@ def register_hello(bot):
                     tg_id,
                     f"✅ پرداخت با موفقیت صورت گرفت. کد قرعه کشی شما: [{code}]"
                 )
-                bot.send_location(tg_id, latitude=38.0750191, longitude=46.2846011)
+                bot.send_location(tg_id, latitude=38.0752305, longitude=46.2870694)
                 bot.send_message(tg_id,"سینما ۲۹ بهمن تبریز")
 
             bot.answer_callback_query(call.id, "Approved ✅")
