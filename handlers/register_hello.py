@@ -11,7 +11,7 @@ ADMIN_IDS=[108738885,428097665]
 def register_hello(bot):
     
     wraper=ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=False)
-    wraper.add('📍 مکان‌ها','لیست دروس 📚','🔗 لینک‌ها','شماره‌ها 📞','🌐 مجازی','🍏 درباره ما 🚬','بریم سینما 🎬')
+    wraper.add('📍 مکان‌ها','لیست دروس 📚','🔗 لینک‌ها','شماره‌ها 📞','🌐 مجازی','🍏 درباره ما 🚬')
     
     @bot.message_handler(commands=['start'])
     def hello(message):
