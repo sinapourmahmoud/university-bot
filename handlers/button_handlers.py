@@ -365,6 +365,8 @@ def register_buttons(bot):
                 return
 
             file_id = message.photo[-1].file_id
+            print(message.photo[-1].file_id)
+
             tg_id = str(message.from_user.id)
 
             # Get the user
@@ -533,13 +535,13 @@ def register_buttons(bot):
         )
 
 
-        with open('./utils/documents/yalda_poster.jpg','rb') as photo:
-            bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
-        🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۷۰٬۰۰۰ تومان
-        🙋🏻 برای مهمان‌های خارج دانشکده: ۸۰٬۰۰۰ تومان
-        📌 نکته مهم:
-        مهمان‌های خارج از دانشکده برای ثبت‌نام نیاز به معرف از داخل دانشکده دارن. (یعنی یکی از بچه‌های دانشکده اول باید ثبت‌نام کنه و بعد بتونه معرف دوستش بشه).
-        🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
+        # with open('./utils/documents/yalda_poster.jpg','rb') as photo:
+        #     bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
+        # 🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۷۰٬۰۰۰ تومان
+        # 🙋🏻 برای مهمان‌های خارج دانشکده: ۸۰٬۰۰۰ تومان
+        # 📌 نکته مهم:
+        # مهمان‌های خارج از دانشکده برای ثبت‌نام نیاز به معرف از داخل دانشکده دارن. (یعنی یکی از بچه‌های دانشکده اول باید ثبت‌نام کنه و بعد بتونه معرف دوستش بشه).
+        # 🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
 
 
         bot.send_message(message.chat.id,"""
