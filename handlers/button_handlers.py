@@ -4,6 +4,7 @@ from utils.socialmedia import socialmedias
 from db import session,User
 DB_PATH='/data/cinema.db'
 
+MAX_YALDA_USERS = 3
 
 
 def register_buttons(bot):
@@ -35,6 +36,8 @@ def register_buttons(bot):
                 about_us(message)
             case 'بریم سینما 🎬':
                 cinema_menu(message)
+            case '🍉 یلدا سی‌اس 🍉':
+                yalda_menu(message)
 
 
     def send_location_menu(chat_id):
@@ -507,6 +510,30 @@ def register_buttons(bot):
         )
         bot.send_message(message.chat.id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
         
+    def yalda_menu(message):
+        print(message.from_user.id)
+        user = session.query(User).filter_by(tg_id=str(message.from_user.id)).first()
+        if user:
+            if user.status=='approved' or user.status=='waiting_admin':
+                bot.send_message(message.chat.id,"شما ثبت نام کرده اید")
+                return
+
+        if is_yalda_full():
+            bot.send_message(
+                message.chat.id,
+                "⛔ ظرفیت ثبت‌نام یلدا تکمیل شده است.\nلطفاً سال آینده همراه ما باشید 🎄"
+            )
+            return
+        bot.send_message(message.chat.id,"hello yalda")
+
+
+    def is_yalda_full():
+        count = session.query(User).filter(
+            User.status.in_(["approved", "waiting_admin"])
+        ).count()
+
+        return count >= MAX_YALDA_USERS
+
     def exit_and_delete_user(tg_id, message):
         user = session.query(User).filter_by(tg_id=tg_id).first()
         if user:
