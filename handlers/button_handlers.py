@@ -4,7 +4,7 @@ from utils.socialmedia import socialmedias
 from db import session,User
 DB_PATH='/data/cinema.db'
 
-MAX_YALDA_USERS = 3
+MAX_YALDA_USERS = 90
 
 
 def register_buttons(bot):
@@ -34,8 +34,8 @@ def register_buttons(bot):
                 social_medias(message)
             case '🍏 درباره ما 🚬':
                 about_us(message)
-            case 'بریم سینما 🎬':
-                cinema_menu(message)
+            # case 'بریم سینما 🎬':
+            #     cinema_menu(message)
             case '🍉 یلدا سی‌اس 🍉':
                 yalda_menu(message)
 
@@ -525,6 +525,13 @@ def register_buttons(bot):
             )
             return
         bot.send_message(message.chat.id,"hello yalda")
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(
+            InlineKeyboardButton("۷۰,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
+            InlineKeyboardButton("۸۰,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
+            
+        )
+        bot.send_message(message.chat.id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
 
 
     def is_yalda_full():
