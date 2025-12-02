@@ -531,6 +531,27 @@ def register_buttons(bot):
             InlineKeyboardButton("۸۰,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
             
         )
+
+
+        with open('./utils/documents/yalda_poster.jpg','rb') as photo:
+            bot.send_photo(message.chat.id, photo, caption="""💳 هزینه شرکت در برنامه سینما:
+        🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۷۰٬۰۰۰ تومان
+        🙋🏻 برای مهمان‌های خارج دانشکده: ۸۰٬۰۰۰ تومان
+        📌 نکته مهم:
+        مهمان‌های خارج از دانشکده برای ثبت‌نام نیاز به معرف از داخل دانشکده دارن. (یعنی یکی از بچه‌های دانشکده اول باید ثبت‌نام کنه و بعد بتونه معرف دوستش بشه).
+        🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
+
+
+        bot.send_message(message.chat.id,"""
+        🔺لطفا در نظر داشته باشین هر اکانت تنها یک‌بار مجاز به ثبت‌نام هست.\n
+        در صورت تعدد ثبت‌نام اطلاعاتتون از دیتابیس حذف میشه.
+        """)
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(
+            InlineKeyboardButton("۷۰,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
+            InlineKeyboardButton("۸۰,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
+            
+        )
         bot.send_message(message.chat.id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)
 
 
