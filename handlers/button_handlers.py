@@ -33,8 +33,8 @@ def register_buttons(bot):
                 social_medias(message)
             case '🍏 درباره ما 🚬':
                 about_us(message)
-            # case 'بریم سینما 🎬':
-            #     cinema_menu(message)
+            case 'بریم سینما 🎬':
+                cinema_menu(message)
 
 
     def send_location_menu(chat_id):
