@@ -152,7 +152,7 @@ def register_buttons(bot):
 
             session.commit()
 
-            bot.send_message(message.chat.id, "🎓 شماره دانشجویی معرف خود را وارد نمایید:")
+            bot.send_message(message.chat.id, "🎓 شماره دانشجویی معرف خود را وارد نمایید(به انگلیسی):")
             bot.register_next_step_handler(message, friend_id_handler)
         except Exception as e:
             bot.send_message(message.chat.id, f"❌ چنین کاربری در سیستم موجود نمیباشد.دوباره امتحان کنید:")
@@ -296,7 +296,7 @@ def register_buttons(bot):
 
             session.commit()
 
-            bot.send_message(message.chat.id, "🎓 شماره دانشجویی خود را وارد نمایید:")
+            bot.send_message(message.chat.id, "🎓 شماره دانشجویی خود را وارد نمایید(به انگلیسی):")
             bot.register_next_step_handler(message, save_id_card)
         except Exception as e:
             bot.send_message(message.chat.id, f"❌ خطا رخ داد: {e}")
@@ -536,22 +536,20 @@ def register_buttons(bot):
 
 
        
-        bot.send_photo(message.chat.id, 'AgACAgQAAxkBAAIaumkvLqxBHadvlv6N_UPWjeJ3lHsUAAKXDGsblhZ4UdsAAZdtWxxi2gEAAwIAA3kAAzYE', caption="""💳 هزینه شرکت در برنامه سینما:
-        🧑🏻‍🎓برای دانشجوهای دانشکده‌مون: ۷۰٬۰۰۰ تومان
-        🙋🏻 برای مهمان‌های خارج دانشکده: ۸۰٬۰۰۰ تومان
-        📌 نکته مهم:
-        مهمان‌های خارج از دانشکده برای ثبت‌نام نیاز به معرف از داخل دانشکده دارن. (یعنی یکی از بچه‌های دانشکده اول باید ثبت‌نام کنه و بعد بتونه معرف دوستش بشه).
-        🎞️ فیلم و زمان هر برنامه قبل از اجرا اعلام میشه، پس چشم از چنل CS PLUS برندار ;)""")
-
-
-        bot.send_message(message.chat.id,"""
-        🔺لطفا در نظر داشته باشین هر اکانت تنها یک‌بار مجاز به ثبت‌نام هست.\n
-        در صورت تعدد ثبت‌نام اطلاعاتتون از دیتابیس حذف میشه.
-        """)
+        bot.send_photo(message.chat.id, 'AgACAgQAAxkBAAIaumkvLqxBHadvlv6N_UPWjeJ3lHsUAAKXDGsblhZ4UdsAAZdtWxxi2gEAAwIAA3kAAzYE', caption="یلدا نزدیکه..🍉\n"
+"شبی برای روشن‌کردن دل‌هامون کنار هم_\n"
+"\n"
+"تو هم به این دورهمی دعوتی رفیق! جایی که گرمای جمع‌مون زمستون رو کوتاه می‌کنه❤️‍🔥.\n"
+"\n"
+"اگه آماده‌ای، بیا کنار هم یلدای امسال رو موندگار کنیم✨\n"
+"\n"
+"هزینه ثبت‌نام دانشجویان علوم‌کامپیوتر: 250T\n"
+"هزینه ثبت‌نام دانشجویان سایر رشته‌ها: 280T \n"
+"❕ثبث‌نام دانشجویان سایر رشته‌ها منوط به داشتن معرف هست.")
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("۷۰,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
-            InlineKeyboardButton("۸۰,۰۰۰ تومان−دانشجویان مهمان", callback_data='foreign'),
+            InlineKeyboardButton("250000 تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
+            InlineKeyboardButton("280000 تومان−دانشجویان مهمان", callback_data='foreign'),
             
         )
         bot.send_message(message.chat.id, "لطفا مبلغ مورد نظر را انتخاب کنید", reply_markup=markup)

@@ -107,10 +107,13 @@ def register_hello(bot):
                 session.commit()
                 bot.send_message(
                     tg_id,
-                    f"✅ پرداخت با موفقیت صورت گرفت. کد قرعه کشی شما: [{code}]"
+                    f"""ثبت‌نامت انجام شد رفیق ✅..
+تو حالا رسمی‌ترین مهمون دورهمی زمستونی ما هستی.
+یلدای امسال با حضور تو گرم‌تر میشه✨.
+منتظرت هستیم!
+
+کد حضور شما: {code}"""
                 )
-                bot.send_location(tg_id, latitude=38.0752305, longitude=46.2870694)
-                bot.send_message(tg_id,"سینما ۲۹ بهمن تبریز")
 
             bot.answer_callback_query(call.id, "Approved ✅")
 
