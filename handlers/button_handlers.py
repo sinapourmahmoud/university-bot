@@ -526,7 +526,6 @@ def register_buttons(bot):
                 "⛔ ظرفیت ثبت‌نام یلدا تکمیل شده است.\nلطفاً سال آینده همراه ما باشید 🎄"
             )
             return
-        bot.send_message(message.chat.id,"hello yalda")
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
             InlineKeyboardButton("۷۰,۰۰۰ تومان−دانشجویان علوم کامپیوتر", callback_data='student'),
