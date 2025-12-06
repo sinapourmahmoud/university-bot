@@ -75,7 +75,6 @@ def register_hello(bot):
         pending = handle_database_pending()
         if not pending:
             bot.send_message(message.chat.id, "✅ No pending payments.")
-        bot.send_message(message.chat.id,f"{pending}")
     
     
         for (tg_id,full_name,is_student,linked_student_id,payment_proof_file_id,status,ticket_code) in pending:
