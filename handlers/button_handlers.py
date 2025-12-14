@@ -4,7 +4,7 @@ from utils.socialmedia import socialmedias
 from db import session,User
 DB_PATH='/data/cinema.db'
 
-MAX_YALDA_USERS = 90
+MAX_YALDA_USERS = 120
 
 
 def register_buttons(bot):
