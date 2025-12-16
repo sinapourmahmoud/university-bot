@@ -36,8 +36,8 @@ def register_buttons(bot):
                 about_us(message)
             # case 'بریم سینما 🎬':
             #     cinema_menu(message)
-            case '🍉 یلدا سی‌اس 🍉':
-                yalda_menu(message)
+            # case '🍉 یلدا سی‌اس 🍉':
+            #     yalda_menu(message)
 
 
     def send_location_menu(chat_id):
