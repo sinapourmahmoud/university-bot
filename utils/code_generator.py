@@ -1,12 +1,20 @@
-from random import randint
-from db import session, User   
+import secrets
 
-def generate_unique_code():
+from db import Registration, SessionLocal
+
+
+def generate_unique_code(event_code: str) -> str:
+    prefix = event_code.upper()
+
     while True:
-        code = f"CINE-{randint(1,10000):05d}"
+        code = f"{prefix}-{secrets.randbelow(90000) + 10000}"
 
-        # check if exists in Postgres
-        exists = session.query(User).filter_by(ticket_code=code).first()
+        with SessionLocal() as session:
+            exists = (
+                session.query(Registration)
+                .filter(Registration.ticket_code == code)
+                .first()
+            )
 
-        if not exists:
-            return code
+            if not exists:
+                return code
