@@ -243,7 +243,7 @@ def seed_events():
             cinema = Event(
                 code="cinema",
                 name="🎬 برنامه سینما",
-                capacity=64,
+                capacity=59,
                 student_price=135000,
                 guest_price=155000,
                 is_active=True,
@@ -257,7 +257,7 @@ def seed_events():
             # DB edit.
             cinema.student_price = 135000
             cinema.guest_price = 155000
-            cinema.capacity = 64
+            cinema.capacity = 59
 
         yalda = session.query(Event).filter_by(code="yalda").first()
 
