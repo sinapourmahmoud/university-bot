@@ -627,12 +627,6 @@ https://tabrizu.ac.ir/fa
             text,
         )
 
-        send_document(
-            message,
-            "anjoman.pdf",
-            "معرفی‌نامه انجمن علمی گروه علوم کامپیوتر دانشگاه تبریز",
-        )
-
         bot.send_message(
             message.chat.id,
             "تهیه‌شده با ❤️",
