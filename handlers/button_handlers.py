@@ -388,6 +388,8 @@ def register_buttons(bot):
             text = f"""
 🎉 {event.name}
 
+📅 تاریخ: ۱۱ آبان
+
 💰 هزینه ثبت‌نام:
 
 🧑🏻‍🎓 دانشجویان علوم کامپیوتر:
@@ -424,7 +426,7 @@ def register_buttons(bot):
             )
 
     def send_cinema_poster(chat_id, caption=None, reply_markup=None):
-        poster_path = DOCUMENTS_DIR / "backrooms_telegram.jpg"
+        poster_path = DOCUMENTS_DIR / "minions.jpg"
         if not poster_path.is_file():
             bot.send_message(
                 chat_id,

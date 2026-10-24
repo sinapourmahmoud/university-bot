@@ -42,6 +42,11 @@ def get_database_url() -> str:
 
 DATABASE_URL = get_database_url()
 
+CINEMA_NAME = "🎬 سینما: مینیون‌ها"
+CINEMA_CAPACITY = 50
+CINEMA_STUDENT_PRICE = 130000
+CINEMA_GUEST_PRICE = 150000
+
 engine_kwargs = {"pool_pre_ping": True, "pool_recycle": 1800}
 if DATABASE_URL.startswith("sqlite"):
     # `timeout` makes SQLite wait (instead of immediately raising
@@ -239,13 +244,24 @@ def seed_events():
     with SessionLocal() as session:
         cinema = session.query(Event).filter_by(code="cinema").first()
 
+        if cinema is not None and cinema.name != CINEMA_NAME:
+            # A different movie is being screened: archive the previous
+            # showing under its own code (keeping its registrations and
+            # tickets intact) so the new movie starts with a clean
+            # capacity count and nobody is told they are "already
+            # registered" from the last one.
+            cinema.code = f"cinema_archived_{cinema.id}"
+            cinema.is_active = False
+            session.flush()
+            cinema = None
+
         if not cinema:
             cinema = Event(
                 code="cinema",
-                name="🎬 برنامه سینما",
-                capacity=0,
-                student_price=135000,
-                guest_price=155000,
+                name=CINEMA_NAME,
+                capacity=CINEMA_CAPACITY,
+                student_price=CINEMA_STUDENT_PRICE,
+                guest_price=CINEMA_GUEST_PRICE,
                 is_active=True,
             )
             session.add(cinema)
@@ -255,15 +271,10 @@ def seed_events():
             # sync below follows the same pattern) so changing a value
             # here takes effect on the next restart without a manual
             # DB edit.
-            #
-            # capacity=0 closes cinema sign-ups entirely: every new
-            # attempt hits the existing "ظرفیت ... تکمیل شده است"
-            # (capacity full) message in begin_registration() and
-            # show_event(), while anyone already approved/waiting is
-            # untouched.
-            cinema.student_price = 135000
-            cinema.guest_price = 155000
-            cinema.capacity = 0
+            cinema.student_price = CINEMA_STUDENT_PRICE
+            cinema.guest_price = CINEMA_GUEST_PRICE
+            cinema.capacity = CINEMA_CAPACITY
+            cinema.is_active = True
 
         yalda = session.query(Event).filter_by(code="yalda").first()
 

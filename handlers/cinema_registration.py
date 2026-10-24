@@ -9,10 +9,7 @@ from db import Event, Registration, SessionLocal, User
 logger = logging.getLogger(__name__)
 
 EVENT_CODE = "cinema"
-PERSIAN_DIGITS = str.maketrans(
-    "۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩",
-    "01234567890123456789",
-)
+ID_CARD_LENGTH = 11
 
 
 def _guard(handler):
@@ -199,7 +196,8 @@ def save_student_name(bot, message, event_code):
     _ask(
         bot,
         message,
-        "🎓 شماره دانشجویی خود را وارد کنید (فقط عدد).",
+        "🎓 شماره دانشجویی ۱۱ رقمی خود را وارد کنید.\n"
+        "⚠️ حتماً با اعداد انگلیسی (English) بنویسید، مثلاً 40012345678.",
         save_student_id,
         event_code,
     )
@@ -211,16 +209,13 @@ def save_student_id(bot, message, event_code):
         _cancel_registration(bot, message, event_code)
         return
 
-    student_id = _message_text(message).translate(PERSIAN_DIGITS)
-    if (
-        not student_id.isascii()
-        or not student_id.isdecimal()
-        or len(student_id) > 32
-    ):
+    student_id = _message_text(message)
+    if not _is_valid_id_card(student_id):
         _ask(
             bot,
             message,
-            "❌ شماره دانشجویی باید فقط شامل عدد باشد.",
+            "❌ شماره دانشجویی باید دقیقاً ۱۱ رقم باشد و حتماً با اعداد "
+            "انگلیسی (مثلاً 40012345678) وارد شود.",
             save_student_id,
             event_code,
         )
@@ -280,7 +275,8 @@ def save_guest_name(bot, message, event_code):
     _ask(
         bot,
         message,
-        "🎓 شماره دانشجویی معرف خود را وارد کنید (فقط عدد).",
+        "🎓 شماره دانشجویی ۱۱ رقمی معرف خود را وارد کنید.\n"
+        "⚠️ حتماً با اعداد انگلیسی (English) بنویسید، مثلاً 40012345678.",
         save_guest_referrer,
         event_code,
     )
@@ -292,16 +288,13 @@ def save_guest_referrer(bot, message, event_code):
         _cancel_registration(bot, message, event_code)
         return
 
-    student_id = _message_text(message).translate(PERSIAN_DIGITS)
-    if (
-        not student_id.isascii()
-        or not student_id.isdecimal()
-        or len(student_id) > 32
-    ):
+    student_id = _message_text(message)
+    if not _is_valid_id_card(student_id):
         _ask(
             bot,
             message,
-            "❌ شماره دانشجویی معرف باید فقط شامل عدد باشد.",
+            "❌ شماره دانشجویی معرف باید دقیقاً ۱۱ رقم باشد و حتماً با "
+            "اعداد انگلیسی (مثلاً 40012345678) وارد شود.",
             save_guest_referrer,
             event_code,
         )
@@ -453,6 +446,19 @@ def _registration_expired(bot, message):
         message.chat.id,
         "❌ فرایند ثبت‌نام پیدا نشد یا دیگر فعال نیست. "
         "لطفاً دوباره از منوی سینما شروع کنید.",
+    )
+
+
+def _is_valid_id_card(value):
+    """An id card number is exactly 11 English (ASCII) digits.
+
+    `str.isdecimal()` alone also accepts Persian/Arabic digits, so the
+    `isascii()` check is what enforces "enter it in English".
+    """
+    return (
+        len(value) == ID_CARD_LENGTH
+        and value.isascii()
+        and value.isdecimal()
     )
 
 

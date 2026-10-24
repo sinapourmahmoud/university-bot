@@ -132,7 +132,7 @@ class CinemaRegistrationTests(unittest.TestCase):
             user = User(
                 tg_id="9000",
                 full_name="Approved Student",
-                student_id_card="54321",
+                student_id_card="40054321000",
                 is_student=True,
             )
             session.add(user)
@@ -179,7 +179,7 @@ class CinemaRegistrationTests(unittest.TestCase):
         cancellation_inputs = [
             (201, [], "لغو"),
             (202, ["Guest Name"], "خروج"),
-            (203, ["Guest Name", "54321"], "exit"),
+            (203, ["Guest Name", "40054321000"], "exit"),
         ]
 
         for chat_id, answers, cancel_input in cancellation_inputs:
@@ -201,26 +201,34 @@ class CinemaRegistrationTests(unittest.TestCase):
         self.reply(301, text="Student Name")
         self.reply(301, text="not-a-number")
         self.assertIn(301, self.bot.next_steps)
-        self.reply(301, text="۱۲۳۴۵")
+        self.reply(301, text="12345")
+        self.assertIn(301, self.bot.next_steps)
+        self.assertIn("۱۱ رقم", self.bot.messages[-1][1])
+        self.reply(301, text="۴۰۰۱۲۳۴۵۶۷۸")
+        self.assertIn(301, self.bot.next_steps)
+        self.assertIn("انگلیسی", self.bot.messages[-1][1])
+        self.reply(301, text="400123456789")
+        self.assertIn(301, self.bot.next_steps)
+        self.reply(301, text="40012345678")
         self.reply(301, photo=[SimpleNamespace(file_id="proof-301")])
 
         registration = self.registration(301)
         self.assertEqual(registration.status, "waiting_admin")
         with self.session_factory() as session:
             user = session.query(User).filter_by(tg_id="301").one()
-            self.assertEqual(user.student_id_card, "12345")
+            self.assertEqual(user.student_id_card, "40012345678")
 
         self.start(302, registration_type="guest")
         self.reply(302, text="Guest Name")
-        self.reply(302, text="12345")
+        self.reply(302, text="40012345678")
         self.assertIn(302, self.bot.next_steps)
 
         self.add_approved_student_referrer()
-        self.reply(302, text="54321")
+        self.reply(302, text="40054321000")
         self.reply(302, photo=[SimpleNamespace(file_id="proof-302")])
         guest_registration = self.registration(302)
         self.assertEqual(guest_registration.status, "waiting_admin")
-        self.assertEqual(guest_registration.linked_student_id, "54321")
+        self.assertEqual(guest_registration.linked_student_id, "40054321000")
 
     def test_unexpected_error_mid_flow_notifies_user_without_crashing(self):
         self.start(601)
