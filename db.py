@@ -43,7 +43,7 @@ def get_database_url() -> str:
 DATABASE_URL = get_database_url()
 
 CINEMA_NAME = "🎬 سینما: مینیون‌ها"
-CINEMA_CAPACITY = 44
+CINEMA_CAPACITY = 41
 CINEMA_STUDENT_PRICE = 130000
 CINEMA_GUEST_PRICE = 150000
 
